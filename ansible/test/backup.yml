@@ -1,0 +1,37 @@
+---
+- name: Configureer dagelijkse backup van /etc en /var/www
+  hosts: test
+  become: true
+
+  tasks:
+    - name: Zorg dat /var/www bestaat zodat backup taak altijd werkt
+      ansible.builtin.file:
+        path: /var/www
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Plaats backup script
+      ansible.builtin.copy:
+        dest: "{{ backup_script_path }}"
+        owner: root
+        group: root
+        mode: "0755"
+        content: |
+          #!/bin/bash
+          set -euo pipefail
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          tar -czf {{ backup_destination }}/system-backup-${TIMESTAMP}.tar.gz /etc /var/www
+
+    - name: Voer backup script eenmalig uit
+      ansible.builtin.command: "{{ backup_script_path }}"
+      changed_when: true
+
+    - name: Voeg dagelijkse cronjob toe voor backup
+      ansible.builtin.cron:
+        name: "Dagelijkse backup van /etc en /var/www"
+        user: root
+        minute: "0"
+        hour: "2"
+        job: "{{ backup_script_path }}"
