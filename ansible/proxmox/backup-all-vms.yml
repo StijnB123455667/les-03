@@ -1,0 +1,22 @@
+---
+- name: Backup alle Proxmox VM's
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    proxmox_api_host: "node1"
+    proxmox_api_user: "test"
+    proxmox_api_password: "test"
+    proxmox_backup_storage: "backup_vm"
+
+  tasks:
+    - name: Start backup van alle VM's naar storage backup_vm
+      community.proxmox.proxmox_backup:
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_password: "{{ proxmox_api_password }}"
+        validate_certs: false
+        storage: "{{ proxmox_backup_storage }}"
+        mode: all
+        wait: true
+        wait_timeout: 3600
