@@ -1,0 +1,5 @@
+esxi_ip: "192.168.1.10"
+esxi_hostname: "esxi"
+local_file_destination: "/tmp/local-example.txt"
+backup_script_path: "/usr/local/sbin/backup-etc-varwww.sh"
+backup_destination: "/tmp"

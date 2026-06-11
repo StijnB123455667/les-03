@@ -1,0 +1,6 @@
+location            = "westeurope"
+name_prefix         = "les03-prod"
+admin_username      = "iac"
+ssh_public_key_path = "~/.ssh/id_ed25519.pub"
+vm_size             = "Standard_B2ats_v2"
+allowed_ssh_source  = "0.0.0.0/0"
